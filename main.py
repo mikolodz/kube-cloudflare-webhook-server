@@ -46,6 +46,7 @@ def verify(token: str) -> dict:
 @app.post("/")
 async def token_review(req: Request):
     body = await req.json()
+    req_api = body.get("apiVersion", "authentication.k8s.io/v1beta1")
     spec = body.get("spec") or {}
     token = spec.get("token") or ""
     wanted_aud = spec.get("audiences") or None
@@ -54,7 +55,7 @@ async def token_review(req: Request):
         username = choose_username(claims)
         groups = claims.get("groups") or []
         resp = {
-            "apiVersion": "authentication.k8s.io/v1",
+            "apiVersion": req_api,
             "kind": "TokenReview",
             "status": {"authenticated": True, "user": {"username": username, "groups": groups}},
         }
@@ -64,7 +65,7 @@ async def token_review(req: Request):
     except Exception as e:
         log.debug("auth_failed error=%s", e)
         return JSONResponse({
-            "apiVersion": "authentication.k8s.io/v1",
+            "apiVersion": req_api,
             "kind": "TokenReview",
             "status": {"authenticated": False},
         })
