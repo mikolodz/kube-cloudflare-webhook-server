@@ -74,7 +74,7 @@ spec:
     spec:
       containers:
         - name: webhook
-          image: ghcr.io/<OWNER>/<REPO>:<TAG>
+          image: ghcr.io/mikolodz/kube-cloudflare-webhook-server:latest
           env:
             - name: CF_TEAM_DOMAIN
               value: "https://<your-team>.cloudflareaccess.com"
